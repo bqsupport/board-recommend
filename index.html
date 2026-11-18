@@ -27,7 +27,7 @@
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   
-  /* 真正的全屏无缝渐变 */
+  /* 全屏无缝渐变 */
   html, body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; 
     background: linear-gradient(180deg, #000000 0%, #0a0a0a 15%, #121212 100%);
@@ -38,7 +38,7 @@
     min-height: 100vh;
   }
   
-  /* 顶部导航完全透明，融入背景 */
+  /* 顶部导航完全透明 */
   .top-nav { 
     padding: 24px 40px; 
     display: flex; 
@@ -142,8 +142,9 @@
     <div class="panel-form">
       <h2>Agent Details</h2>
 
+      <!-- 姓名输入框已修改为 Jason -->
       <label for="name">经纪人姓名 (可选)</label>
-      <input id="name" placeholder="例如：张三">
+      <input id="name" placeholder="例如：Jason">
 
       <label for="address">住址 / 培训地点</label>
       <input id="address" placeholder="例如：Cupertino, CA 或 95129" autocomplete="off">
