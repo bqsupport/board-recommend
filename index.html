@@ -159,10 +159,10 @@
   .result-content { display: none; animation: fadeIn .4s ease; }
   @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
   
-  /* 纯 CSS 高级渐变头图，解决图片加载慢/白屏问题 */
+  /* 高级暗色渐变封面 */
   .hero-image {
-    width: 100%; height: 200px;
-    background: linear-gradient(135deg, #2c2c2c 0%, #111 100%);
+    width: 100%; height: 160px;
+    background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
     position: relative;
     border-bottom: 3px solid var(--gold-primary);
     display: flex; align-items: flex-end;
@@ -172,7 +172,7 @@
     display: flex; gap: 8px;
   }
   .badge-pill {
-    background: rgba(255,255,255,0.15); backdrop-filter: blur(4px);
+    background: rgba(255,255,255,0.1); backdrop-filter: blur(4px);
     color: #fff; font-size: 11px; font-weight: 600; letter-spacing: 0.05em;
     padding: 4px 12px; border-radius: 50px; border: 1px solid rgba(255,255,255,0.2);
   }
@@ -239,7 +239,7 @@
       <input id="address" placeholder="例如：Cupertino, CA 或 95129" autocomplete="off">
       <div class="hint" style="font-size:11px; color:#666; margin-top:6px;">用于计算离地标的直线距离</div>
 
-      <label>主要交易区域 (按勾选顺序优先)</label>
+      <label>主要交易区域</label>
       <div class="area-group">
         <label><input type="checkbox" name="area" value="south_bay"> <span>南湾 / Silicon Valley</span></label>
         <label><input type="checkbox" name="area" value="san_jose"> <span>San Jose 市区 / Santa Clara</span></label>
@@ -486,17 +486,15 @@
       const boardGeo = GEO[b.city.toLowerCase()] || null;
       const dist = haversine(agentGeo, boardGeo);
       
-      // 修改排序逻辑：优先匹配用户勾选的顺序
-      let highestOrderIndex = 999;
-      b.covers.forEach(c => {
-         const idx = areas.indexOf(c);
-         if (idx !== -1 && idx < highestOrderIndex) highestOrderIndex = idx;
-      });
-      
       const areaHits = b.covers.filter(c => areas.includes(c)).length;
       let score = areaHits * 100;
-      if (highestOrderIndex !== 999) score -= highestOrderIndex * 10; // 越先勾选的优先级越高
       
+      // 核心修复：如果用户勾选了某个区域，且 Board 覆盖了这个区域，加分极大，完全避免跨区瞎匹配
+      if (b.covers.includes('orange') && areas.includes('orange')) score += 500;
+      if (b.covers.includes('sf') && areas.includes('sf')) score += 500;
+      if (b.covers.includes('san_mateo') && areas.includes('san_mateo')) score += 500;
+      if (b.covers.includes('sacramento') && areas.includes('sacramento')) score += 500;
+
       if (commercial && b.commercial) score += 60;
       if (dist != null) score += Math.max(0, 60 - dist);
       
