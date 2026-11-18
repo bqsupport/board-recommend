@@ -36,16 +36,15 @@
     -webkit-font-smoothing: antialiased;
   }
   
-  /* 顶部导航 Logo */
+  /* 顶部导航 */
   .top-nav {
-    padding: 16px 40px;
+    padding: 20px 40px;
     display: flex;
     align-items: center;
-    border-bottom: 1px solid var(--border-dark);
-    background-color: #000;
+    background-color: #000; /* 去掉了 border-bottom，保留纯黑背景 */
   }
   .logo-img {
-    height: 52px; /* 这里控制Logo图片的大小，如果觉得太大可以改成 40px */
+    height: 90px; /* 放大到90px，更醒目 */
     width: auto;
     object-fit: contain;
   }
@@ -485,11 +484,9 @@
       const boardGeo = GEO[b.city.toLowerCase()] || null;
       const dist = haversine(agentGeo, boardGeo);
       
-      // 极简打分法：命中的勾选区域数量 * 1000
       const areaHits = b.covers.filter(c => areas.includes(c)).length;
       let score = areaHits * 1000; 
 
-      // 距离只做轻微辅助修正
       if (dist != null) {
          score += Math.max(0, 100 - dist); 
       }
