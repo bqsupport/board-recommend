@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BQ agent board recommend</title>
+<style>
+  :root {
+    --bg: #fbfaf7;
+    --card: #ffffff;
+    --text: #3d2c1e;
+    --muted: #8c7b6b;
+    --line: #e8e0d5;
+    --gold: #f2dc76;
+    --gold-soft: #fdf8e4;
+    --rust: #96570b;
+    --rust-soft: #fdf3e6;
+    --ok: #5c7a4a;
+    --ok-soft: #f0f5eb;
+    --warn: #b07020;
+    --warn-soft: #fff6e6;
+    --danger: #a33a2a;
+    --danger-soft: #fdf0ee;
+    --radius: 16px;
+    --shadow: 0 1px 3px rgba(61,44,30,.06), 0 1px 2px rgba(61,44,30,.04);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 32px 20px 64px; }
+
+  /* Header */
+  header { margin-bottom: 28px; }
+  .brand-line {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 10px;
+  }
+  .brand-mark {
+    width: 34px; height: 34px; border-radius: 10px;
+    background: var(--rust); color: var(--gold);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 800; letter-spacing: .04em;
+    flex-shrink: 0;
+  }
+  h1 { font-size: 25px; margin: 0; letter-spacing: -0.02em; font-weight: 700; }
+  .sub { color: var(--muted); font-size: 14px; margin: 4px 0 0; max-width: 720px; }
+  .gold-rule {
+    height: 3px; width: 56px; background: var(--gold);
+    border-radius: 2px; margin-top: 14px;
+  }
+
+  .grid { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 22px; align-items: start; }
+  @media (max-width: 860px) { .grid { grid-template-columns: 1fr; } }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 22px;
+    box-shadow: var(--shadow);
+  }
+  .card h2 {
+    font-size: 16px; margin: 0 0 4px; font-weight: 700;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .card h2 .dot {
+    width: 8px; height: 8px; border-radius: 50%; background: var(--gold); flex-shrink: 0;
+  }
+  .card-desc { font-size: 12.5px; color: var(--muted); margin: 0 0 16px; }
+
+  label { display: block; font-size: 13px; font-weight: 600; margin: 14px 0 5px; color: var(--text); }
+  input, select, textarea {
+    width: 100%; padding: 10px 12px; border: 1px solid var(--line);
+    border-radius: 10px; font-size: 14px; background: #fff; color: var(--text);
+    outline: none; transition: border-color .15s, box-shadow .15s;
+    font-family: inherit;
+  }
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--rust);
+    box-shadow: 0 0 0 3px rgba(150,87,11,.10);
+  }
+  input::placeholder { color: #c4b8aa; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  
+  .checkline { display: flex; align-items: center; gap: 8px; margin-top: 16px; font-size: 14px; cursor: pointer; }
+  .checkline input { width: auto; accent-color: var(--rust); cursor: pointer; }
+
+  /* 复选框组样式 */
+  .area-group {
+    border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px;
+    background: #fff; max-height: 220px; overflow-y: auto; font-size: 13.5px;
+  }
+  .area-group label {
+    display: flex; align-items: flex-start; gap: 10px; margin: 0 0 10px 0;
+    font-weight: 400; cursor: pointer; line-height: 1.4; color: var(--text);
+  }
+  .area-group label:last-child { margin-bottom: 0; }
+  .area-group input[type="checkbox"] {
+    margin-top: 2px; width: 16px; height: 16px; accent-color: var(--rust); cursor: pointer;
+  }
+
+  button {
+    margin-top: 20px; width: 100%; padding: 13px 16px; border: 0; border-radius: 11px;
+    background: var(--rust); color: #fff; font-size: 15px; font-weight: 600;
+    cursor: pointer; transition: background .15s, transform .1s; font-family: inherit;
+  }
+  button:hover { background: #7d4a09; }
+  button:active { transform: scale(.99); }
+  button.secondary {
+    background: transparent; color: var(--muted); border: 1px solid var(--line);
+    margin-top: 10px; font-weight: 500;
+  }
+  button.secondary:hover { background: #f7f4ef; color: var(--text); }
+
+  .hint { font-size: 12px; color: var(--muted); margin-top: 5px; }
+
+  /* Result 区域 */
+  .result-empty {
+    color: var(--muted); font-size: 14px; padding: 32px 0;
+    text-align: center; line-height: 1.8;
+  }
+  .result-empty .deco {
+    width: 44px; height: 44px; border-radius: 12px; background: var(--gold-soft);
+    margin: 0 auto 12px; display: flex; align-items: center; justify-content: center;
+    font-size: 20px; color: var(--rust);
+  }
+
+  .badge {
+    display: inline-block; font-size: 11.5px; font-weight: 700; padding: 3px 10px;
+    border-radius: 999px; margin-bottom: 8px; letter-spacing: .02em;
+  }
+  .badge.ok { background: var(--ok-soft); color: var(--ok); }
+  .badge.warn { background: var(--warn-soft); color: var(--warn); }
+  .badge.danger { background: var(--danger-soft); color: var(--danger); }
+  .badge.info { background: var(--gold-soft); color: var(--rust); }
+
+  .rec-title { font-size: 20px; font-weight: 700; margin: 2px 0 1px; letter-spacing: -0.01em; }
+  .rec-sub { font-size: 13px; color: var(--muted); margin-bottom: 14px; }
+
+  .section { border-top: 1px solid var(--line); padding-top: 14px; margin-top: 14px; }
+  .section h3 {
+    font-size: 11.5px; text-transform: uppercase; letter-spacing: .06em;
+    color: var(--muted); margin: 0 0 8px; font-weight: 700;
+  }
+  ul { margin: 0; padding-left: 17px; }
+  li { margin: 4px 0; font-size: 14px; }
+  li::marker { color: var(--gold); }
+
+  .alt {
+    background: #fbf9f5; border: 1px solid var(--line);
+    border-radius: 11px; padding: 13px; margin-top: 10px;
+  }
+  .alt strong { font-size: 14px; }
+  .note { font-size: 12.5px; color: var(--muted); margin-top: 10px; }
+  .footer {
+    margin-top: 24px; font-size: 11.5px; color: var(--muted);
+    text-align: center; line-height: 1.7;
+  }
+
+  a { color: var(--rust); text-decoration: none; border-bottom: 1px solid rgba(150,87,11,.25); }
+  a:hover { border-bottom-color: var(--rust); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand-line">
+      <div class="brand-mark">BQ</div>
+      <h1>BQ agent board recommend</h1>
+    </div>
+    <p class="sub">根据交易区域、BQ 已有 Board 与住址距离，为经纪人初筛最合适的 local association / MLS。结果仅供内部参考，价格与覆盖范围以 Board 官方答复为准。</p>
+    <div class="gold-rule"></div>
+  </header>
+
+  <div class="grid">
+    <!-- 输入区 -->
+    <div class="card">
+      <h2><span class="dot"></span>经纪人信息</h2>
+      <p class="card-desc">填写后点击生成，系统按区域匹配和距离排序给出建议。</p>
+
+      <label for="name">经纪人姓名（可选）</label>
+      <input id="name" placeholder="例如：张三">
+
+      <label for="address">住址 / 方便参加培训的地点</label>
+      <input id="address" placeholder="例如：Cupertino, CA 或 95129" autocomplete="off">
+      <div class="hint">用于多个候选 Board 之间的距离排序。</div>
+
+      <label>主要交易区域（可多选）</label>
+      <div class="area-group">
+        <label><input type="checkbox" name="area" value="south_bay"> <span>南湾 / Silicon Valley（Cupertino、Sunnyvale、Santa Clara、Los Gatos、Saratoga、Campbell 等）</span></label>
+        <label><input type="checkbox" name="area" value="san_jose"> <span>San Jose 市区 / Santa Clara County 全境</span></label>
+        <label><input type="checkbox" name="area" value="east_bay"> <span>东湾（Pleasanton、Fremont、Hayward、Livermore 等）</span></label>
+        <label><input type="checkbox" name="area" value="san_mateo"> <span>San Mateo County（Daly City、San Mateo、Redwood City 等）</span></label>
+        <label><input type="checkbox" name="area" value="sf"> <span>San Francisco</span></label>
+        <label><input type="checkbox" name="area" value="orange"> <span>Orange County</span></label>
+        <label><input type="checkbox" name="area" value="sacramento"> <span>Sacramento</span></label>
+        <label><input type="checkbox" name="area" value="contra_costa"> <span>Contra Costa（Walnut Creek、Concord 等）</span></label>
+        <label><input type="checkbox" name="area" value="berkeley"> <span>Berkeley / bridgeMLS 覆盖区</span></label>
+        <label><input type="checkbox" name="area" value="commercial"> <span>商业交易 / 生意买卖为主</span></label>
+        <label><input type="checkbox" name="area" value="other"> <span>其他 / 跨区域 / 不确定</span></label>
+      </div>
+
+      <div class="row">
+        <div>
+          <label for="hasMls">是否已有 MLS 账号</label>
+          <select id="hasMls">
+            <option value="unknown">不确定</option>
+            <option value="yes">有</option>
+            <option value="no">无</option>
+          </select>
+        </div>
+        <div>
+          <label for="commercialSelect">是否主要做商业地产</label>
+          <select id="commercialSelect">
+            <option value="no">否</option>
+            <option value="yes">是</option>
+          </select>
+        </div>
+      </div>
+
+      <label for="constraint">必须使用的 MLS / lockbox system（可选）</label>
+      <input id="constraint" placeholder="例如：MLSListings / bridgeMLS / Supra eKey">
+
+      <label class="checkline">
+        <input type="checkbox" id="acceptExisting" checked>
+        <span>接受加入 BQ 已有 Board</span>
+      </label>
+
+      <button id="run">生成推荐</button>
+      <button id="reset" class="secondary">清空</button>
+    </div>
+
+    <!-- 结果区 -->
+    <div class="card">
+      <h2><span class="dot"></span>推荐结果</h2>
+      <div id="result" class="result-empty">
+        <div class="deco">◎</div>
+        填写左侧信息后点击“生成推荐”。<br>
+        <span style="font-size:12.5px;">首选 Board、备选方案与 MLS 加入顺序会显示在这里。</span>
+      </div>
+      <div class="footer">
+        数据来源：BQ Board 文件 · Board 边界与 MLS 覆盖以官方为准 · 跨区可考虑 Secondary Membership
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  // ===== Board 数据库 =====
+  const BOARDS = [
+    {
+      id: 'SILVAR', name: 'SILVAR（The Silicon Valley Association of REALTORS®）', short: 'SILVAR',
+      office: '19400 Stevens Creek Blvd., Ste 100, Cupertino, CA 95014', city: 'Cupertino',
+      phone: '408-200-0100', site: 'https://www.silvar.org',
+      covers: ['south_bay', 'san_jose'], mlsOrder: 'mls_first',
+      mlsOrderText: '先加入 MLSListings，再填写 SILVAR Board 申请。',
+      notes: ['南湾首选', '申请表发 membership@silvar.org', '电话跟进 408-200-0100 较快'],
+      commercial: false
+    },
+    {
+      id: 'BAYEAST', name: 'Bay East Association of REALTORS®', short: 'Bay East',
+      office: '7021 Koll Center Pkwy, Pleasanton, CA 94566', city: 'Pleasanton',
+      phone: '(925) 730-4060', site: 'https://bayeast.org',
+      covers: ['east_bay'], mlsOrder: 'board_first',
+      mlsOrderText: '先填 Bay East Board 申请，由 Board 为 agent 申请 MLS；自己先申请的 MLS 账号无法加入 Bay East。',
+      notes: ['东湾首选', '务必先 Board 后 MLS'], commercial: false
+    },
+    {
+      id: 'SCCAOR', name: 'SANTA CLARA COUNTY ASSOCIATION OF REALTORS®（SCCAOR）', short: 'SCCAOR',
+      office: '1651 North First Street, San Jose, CA 95112', city: 'San Jose',
+      phone: '(408) 445-8500', site: 'http://www.sccaor.com',
+      covers: ['san_jose', 'south_bay'], mlsOrder: 'confirm',
+      mlsOrderText: '加入顺序请先电话向 Board 确认。',
+      notes: ['San Jose / Santa Clara County', 'membership@sccaor.com'], commercial: false
+    },
+    {
+      id: 'SAMCAR', name: 'San Mateo County Association of REALTORS®（SAMCAR）', short: 'SAMCAR',
+      office: '850 Woodside Way, San Mateo, CA 94401', city: 'San Mateo',
+      phone: '(650) 696-8200', site: 'https://www.samcar.org',
+      covers: ['san_mateo'], mlsOrder: 'confirm',
+      mlsOrderText: '加入顺序请先电话向 Board 确认。',
+      notes: ['San Mateo County 首选'], commercial: false
+    },
+    {
+      id: 'OCREALTORS', name: 'Orange County REALTORS®', short: 'Orange County',
+      office: 'Fountain Valley / Laguna Hills', city: 'Fountain Valley',
+      phone: '714-375-9313 / 949-586-6800', site: 'https://www.ocrealtors.org',
+      covers: ['orange'], mlsOrder: 'confirm',
+      mlsOrderText: '加入顺序请先电话向 Board 确认。',
+      notes: ['Orange County 首选'], commercial: false
+    },
+    {
+      id: 'OBAR', name: 'OBAR & bridgeMLS', short: 'OBAR & bridgeMLS',
+      office: '2855 Telegraph Avenue, Berkeley, CA 94705 #600', city: 'Berkeley',
+      phone: '925.363.2333', site: 'https://www.bridgemls.com',
+      covers: ['berkeley', 'east_bay'], mlsOrder: 'confirm',
+      mlsOrderText: '加入顺序请先电话向 Board 确认。',
+      notes: ['Berkeley / bridgeMLS 覆盖区'], commercial: false
+    },
+    {
+      id: 'SFAR', name: 'San Francisco Association of REALTORS（SFAR）', short: 'SFAR',
+      office: '301 Grove Street, San Francisco, CA 94102', city: 'San Francisco',
+      phone: '(415) 431-8500', site: 'https://www.sfrealtors.com',
+      covers: ['sf'], mlsOrder: 'confirm',
+      mlsOrderText: '加入顺序请先电话向 Board 确认。',
+      notes: ['San Francisco 首选'], commercial: false
+    },
+    {
+      id: 'SAR', name: 'Sacramento Association of Realtors（SAR）& Metrolist MLS', short: 'SAR & Metrolist',
+      office: '2003 Howe Avenue, Sacramento, CA 95825', city: 'Sacramento',
+      phone: '(916) 922-7711', site: 'https://www.sacrealtor.org',
+      covers: ['sacramento'], mlsOrder: 'confirm',
+      mlsOrderText: '加入顺序请先电话向 Board 确认；Metrolist MLS 另有申请入口。',
+      notes: ['Sacramento 首选'], commercial: false
+    },
+    {
+      id: 'CCAR', name: 'Contra Costa Association of Realtors（CCAR）', short: 'CCAR',
+      office: '1870 Olympic Blvd, Suite 200, Walnut Creek, CA 94596', city: 'Walnut Creek',
+      phone: '925.295.1270', site: 'https://ccartoday.com',
+      covers: ['contra_costa'], mlsOrder: 'confirm',
+      mlsOrderText: '加入顺序请先电话向 Board 确认。',
+      notes: ['Contra Costa 首选'], commercial: false
+    },
+    {
+      id: 'CABB', name: 'CA Association of Business Brokers（CABB）', short: 'CABB',
+      office: '4747 N. First Street, STE 140, Fresno, CA 93726', city: 'Fresno',
+      phone: '866-972-2220', site: 'https://cabb.org',
+      covers: ['commercial'], mlsOrder: 'confirm',
+      mlsOrderText: '加入顺序请先向 CABB 确认。',
+      notes: ['商业交易/生意买卖多者适用', '有专业 forms', '折扣码 sfmjc5s6j（$100-$162 off）'],
+      commercial: true
+    }
+  ];
+
+  const GEO = {
+    'cupertino': [37.3229, -122.0322], 'sunnyvale': [37.3688, -122.0363],
+    'santa clara': [37.3541, -121.9552], 'san jose': [37.3382, -121.8863],
+    'los gatos': [37.2358, -121.9624], 'saratoga': [37.2638, -122.0230],
+    'campbell': [37.2872, -121.9500], 'pleasanton': [37.6624, -121.8747],
+    'fremont': [37.5485, -121.9886], 'hayward': [37.6688, -122.0808],
+    'livermore': [37.6819, -121.7680], 'san mateo': [37.5630, -122.3255],
+    'daly city': [37.6879, -122.4702], 'redwood city': [37.4852, -122.2364],
+    'san francisco': [37.7749, -122.4194], 'oakland': [37.8044, -122.2712],
+    'berkeley': [37.8715, -122.2730], 'walnut creek': [37.9101, -122.0652],
+    'concord': [37.9779, -122.0311], 'sacramento': [38.5816, -121.4944],
+    'fountain valley': [33.7097, -117.9537], 'laguna hills': [33.6125, -117.7128],
+    'fresno': [36.7378, -119.7871]
+  };
+
+  const AREA_LABEL = {
+    south_bay: '南湾 / Silicon Valley', san_jose: 'San Jose / Santa Clara County',
+    east_bay: '东湾', san_mateo: 'San Mateo County', sf: 'San Francisco',
+    orange: 'Orange County', sacramento: 'Sacramento', contra_costa: 'Contra Costa',
+    berkeley: 'Berkeley / bridgeMLS', commercial: '商业交易 / 生意买卖', other: '其他 / 跨区域'
+  };
+
+  const $ = (id) => document.getElementById(id);
+
+  function haversine(a, b) {
+    if (!a || !b) return null;
+    const R = 3958.8, toRad = d => d * Math.PI / 180;
+    const dLat = toRad(b[0]-a[0]), dLon = toRad(b[1]-a[1]);
+    const h = Math.sin(dLat/2)**2 + Math.cos(toRad(a[0]))*Math.cos(toRad(b[0]))*Math.sin(dLon/2)**2;
+    return 2 * R * Math.asin(Math.sqrt(h));
+  }
+
+  function geocode(text) {
+    if (!text) return null;
+    const t = text.toLowerCase().trim();
+    for (const key of Object.keys(GEO)) if (t.includes(key)) return GEO[key];
+    const zipMap = [
+      [/^95(0[0-9]{2}|1[0-9]{2})/, 'cupertino'], [/^94(0[0-9]{2}|1[0-9]{2})/, 'san mateo'],
+      [/^94(1[0-9]{2}|2[0-9]{2}|3[0-9]{2})/, 'san francisco'], [/^94(5[0-9]{2}|6[0-9]{2})/, 'pleasanton'],
+      [/^95(1[0-9]{2}|2[0-9]{2})/, 'san jose'], [/^92(7[0-9]{2}|8[0-9]{2})/, 'orange'],
+      [/^9(5[0-9]{3})/, 'sacramento']
+    ];
+    for (const [re, city] of zipMap) if (re.test(t)) return GEO[city] || null;
+    return null;
+  }
+
+  function selectedAreas() {
+    return Array.from(document.querySelectorAll('input[name="area"]:checked')).map(cb => cb.value);
+  }
+
+  function run() {
+    const name = $('name').value.trim();
+    const address = $('address').value.trim();
+    const areas = selectedAreas();
+    const hasMls = $('hasMls').value;
+    const commercial = $('commercialSelect').value === 'yes';
+    const constraint = $('constraint').value.trim();
+    const acceptExisting = $('acceptExisting').checked;
+    const result = $('result');
+
+    if (!areas.length) {
+      result.innerHTML = '<div class="badge warn">缺少信息</div><div class="rec-title">请至少勾选一个交易区域</div><div class="rec-sub">推荐器需要交易区域才能做地理匹配。</div>';
+      return;
+    }
+
+    let matched = BOARDS.filter(b => b.covers.some(c => areas.includes(c)));
+    if (commercial || areas.includes('commercial')) {
+      const cabb = BOARDS.find(b => b.id === 'CABB');
+      if (cabb && !matched.some(b => b.id === 'CABB')) matched.push(cabb);
+    }
+
+    const seen = new Set();
+    matched = matched.filter(b => { if (seen.has(b.id)) return false; seen.add(b.id); return true; });
+
+    const agentGeo = geocode(address);
+
+    matched = matched.map(b => {
+      const boardGeo = GEO[b.city.toLowerCase()] || null;
+      const dist = haversine(agentGeo, boardGeo);
+      const areaHits = b.covers.filter(c => areas.includes(c)).length;
+      let score = areaHits * 100;
+      if (commercial && b.commercial) score += 60;
+      if (dist != null) score += Math.max(0, 60 - dist);
+      return { ...b, dist, score };
+    }).sort((a, b) => b.score - a.score);
+
+    if (!matched.length) {
+      result.innerHTML = `
+        <div class="badge danger">需人工评估</div>
+        <div class="rec-title">没有直接匹配的 BQ 已有 Board</div>
+        <div class="rec-sub">交易区域不在 BQ 现有 Board 的明确覆盖范围内。</div>
+        <div class="section"><h3>下一步</h3><ul>
+          <li>提交 BQ 咨询/申请表：<a href="https://forms.gle/j5d4Mx4vjk9KLhnHA" target="_blank" rel="noopener">forms.gle/j5d4Mx4vjk9KLhnHA</a></li>
+          <li>公司会先评估是否有其他已加入 Board 适合；若无，再评估新 Board 需求与成本。</li>
+          <li>同时联系目标 Board 确认价格、billing cycle、MLS 覆盖与 lockbox system。</li>
+        </ul></div>
+        ${name ? `<div class="note">经纪人：${escapeHtml(name)}</div>` : ''}
+      `;
+      return;
+    }
+
+    const primary = matched[0];
+    const alternates = matched.slice(1, 4);
+
+    const orderBadge = primary.mlsOrder === 'board_first'
+      ? '<span class="badge warn">关键：先 Board 后 MLS</span>'
+      : primary.mlsOrder === 'mls_first'
+        ? '<span class="badge warn">关键：先 MLS 后 Board</span>'
+        : '<span class="badge info">加入顺序需向 Board 确认</span>';
+
+    const distText = primary.dist != null
+      ? `约 ${primary.dist.toFixed(1)} 英里（直线距离，仅供参考）`
+      : '住址未识别，未参与距离排序';
+
+    result.innerHTML = `
+      <div class="badge ok">首选推荐</div>
+      <div class="rec-title">${escapeHtml(primary.short)}</div>
+      <div class="rec-sub">${escapeHtml(primary.name)}</div>
+      ${orderBadge}
+      <div class="section"><h3>匹配理由</h3><ul>
+        <li>交易区域覆盖：${primary.covers.filter(c => areas.includes(c)).map(c => AREA_LABEL[c] || c).join('、')}</li>
+        <li>BQ 已加入：是（BQ Board list）</li>
+        <li>距离：${distText}</li>
+        ${primary.commercial ? '<li>商业交易：该 Board 适合大量 business transactions</li>' : ''}
+      </ul></div>
+      <div class="section"><h3>关键操作提示</h3><ul>
+        <li>${escapeHtml(primary.mlsOrderText)}</li>
+        <li>办公室：${escapeHtml(primary.office)}</li>
+        <li>电话：${escapeHtml(primary.phone)}　官网：<a href="${primary.site}" target="_blank" rel="noopener">${escapeHtml(primary.site)}</a></li>
+        <li>需向 Board 确认：价格、billing cycle、MLS 覆盖范围、lockbox system、Supra eKey 时间。</li>
+        ${primary.notes.map(n => `<li>${escapeHtml(n)}</li>`).join('')}
+      </ul></div>
+      ${constraint ? `<div class="section"><h3>你指定的 MLS / lockbox</h3><ul><li>${escapeHtml(constraint)}：请先向 ${escapeHtml(primary.short)} 确认是否支持。</li></ul></div>` : ''}
+      ${hasMls === 'yes' && primary.mlsOrder === 'board_first' ? `<div class="section"><h3>注意</h3><ul><li>你已有 MLS 账号，但 ${escapeHtml(primary.short)} 要求先 Board 后 MLS；自己申请的 MLS 账号可能无法加入该 Board，务必先电话确认。</li></ul></div>` : ''}
+      ${alternates.length ? `<div class="section"><h3>备选</h3>${alternates.map(a => `
+        <div class="alt"><strong>${escapeHtml(a.short)}</strong>
+        <div class="rec-sub" style="margin:3px 0 6px;">${escapeHtml(a.name)}</div>
+        <div style="font-size:13.5px;">${escapeHtml(a.mlsOrderText)}</div>
+        <div class="note">覆盖：${a.covers.map(c => AREA_LABEL[c] || c).join('、')}｜电话：${escapeHtml(a.phone)}</div></div>
+      `).join('')}</div>` : ''}
+      <div class="section"><h3>下一步</h3><ul>
+        <li>下载申请表 → 可发 HR（hr@bqrealtygroup.com）检查 → DocuSign 给 broker@bqrealtygroup.com 和自己签字（broker signee: Jing Qin）→ 发给 Board。</li>
+        <li>若首选不在 BQ list 或需新增 Board：提交 <a href="https://forms.gle/j5d4Mx4vjk9KLhnHA" target="_blank" rel="noopener">咨询表</a>。</li>
+        <li>跨区域可考虑 Secondary Membership（SILVAR 和 Bay East 均提供）。</li>
+      </ul></div>
+      ${!acceptExisting ? `<div class="note">你勾选了“不接受 BQ 已有 Board”，但本结果仍基于已有 Board 初筛；如坚持新 Board，请走咨询表人工评估。</div>` : ''}
+      ${name ? `<div class="note">经纪人：${escapeHtml(name)}</div>` : ''}
+    `;
+  }
+
+  function escapeHtml(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+
+  $('run').addEventListener('click', run);
+  
+  $('reset').addEventListener('click', () => {
+    $('name').value = ''; 
+    $('address').value = '';
+    document.querySelectorAll('input[name="area"]').forEach(cb => cb.checked = false);
+    $('hasMls').value = 'unknown';
+    $('commercialSelect').value = 'no'; 
+    $('constraint').value = '';
+    $('acceptExisting').checked = true;
+    $('result').innerHTML = '<div class="deco">◎</div>填写左侧信息后点击“生成推荐”。<br><span style="font-size:12.5px;">首选 Board、备选方案与 MLS 加入顺序会显示在这里。</span>';
+    $('result').className = 'result-empty';
+  });
+})();
+</script>
+</body>
+</html>
