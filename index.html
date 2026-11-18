@@ -159,22 +159,22 @@
   .result-content { display: none; animation: fadeIn .4s ease; }
   @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
   
+  /* 纯 CSS 高级渐变头图，解决图片加载慢/白屏问题 */
   .hero-image {
-    width: 100%; height: 240px; background-size: cover; background-position: center;
+    width: 100%; height: 200px;
+    background: linear-gradient(135deg, #2c2c2c 0%, #111 100%);
     position: relative;
-  }
-  .hero-image::after {
-    content: ''; position: absolute; inset: 0;
-    background: linear-gradient(to bottom, transparent 40%, rgba(0,0,0,0.7) 100%);
+    border-bottom: 3px solid var(--gold-primary);
+    display: flex; align-items: flex-end;
   }
   .hero-badge {
-    position: absolute; bottom: 20px; left: 30px; z-index: 2;
+    position: absolute; bottom: 20px; left: 30px;
     display: flex; gap: 8px;
   }
   .badge-pill {
-    background: rgba(255,255,255,0.2); backdrop-filter: blur(4px);
+    background: rgba(255,255,255,0.15); backdrop-filter: blur(4px);
     color: #fff; font-size: 11px; font-weight: 600; letter-spacing: 0.05em;
-    padding: 4px 12px; border-radius: 50px; border: 1px solid rgba(255,255,255,0.3);
+    padding: 4px 12px; border-radius: 50px; border: 1px solid rgba(255,255,255,0.2);
   }
   .badge-pill.gold { background: var(--gold-primary); color: #111; border: none; }
 
@@ -207,7 +207,6 @@
 
   .alt-section { margin-top: 40px; border-top: 1px solid var(--line); padding-top: 24px; }
   .alt-card { background: #fdfdfd; border: 1px solid var(--line); border-radius: var(--radius-md); padding: 20px; margin-bottom: 16px; display: flex; gap: 20px; align-items: center; }
-  .alt-card .alt-img { width: 80px; height: 80px; border-radius: var(--radius-sm); background-size: cover; background-position: center; flex-shrink: 0; }
   .alt-info h4 { font-family: 'Playfair Display', serif; font-size: 18px; margin-bottom: 4px; }
   .alt-info p { font-size: 12px; color: var(--text-muted); }
 
@@ -240,7 +239,7 @@
       <input id="address" placeholder="例如：Cupertino, CA 或 95129" autocomplete="off">
       <div class="hint" style="font-size:11px; color:#666; margin-top:6px;">用于计算离地标的直线距离</div>
 
-      <label>主要交易区域 (可多选)</label>
+      <label>主要交易区域 (按勾选顺序优先)</label>
       <div class="area-group">
         <label><input type="checkbox" name="area" value="south_bay"> <span>南湾 / Silicon Valley</span></label>
         <label><input type="checkbox" name="area" value="san_jose"> <span>San Jose 市区 / Santa Clara</span></label>
@@ -297,7 +296,7 @@
   </div>
   
   <div class="footer">
-    Data source: BQ Board Files. Images provided by Unsplash.
+    Data source: BQ Board Files.
   </div>
 </div>
 
@@ -313,8 +312,7 @@
       mlsOrderText: '先加入 MLSListings，再填写 SILVAR Board 申请。',
       notes: ['南湾首选 Board', '申请表发至 membership@silvar.org', '建议电话跟进加速审批'],
       commercial: false,
-      bqAgents: 48,
-      image: 'https://images.unsplash.com/photo-1582215791367-8fb67495a123?auto=format&fit=crop&q=80&w=1200&h=400'
+      bqAgents: 48
     },
     {
       id: 'BAYEAST', name: 'Bay East Association of REALTORS®', short: 'Bay East',
@@ -324,8 +322,7 @@
       mlsOrderText: '先填 Bay East Board 申请，由 Board 代为申请 MLS；自行申请的 MLS 无法加入 Bay East。',
       notes: ['东湾首选 Board', '极其严格，务必先 Board 后 MLS'],
       commercial: false,
-      bqAgents: 35,
-      image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=1200&h=400'
+      bqAgents: 35
     },
     {
       id: 'SCCAOR', name: 'Santa Clara County Association of REALTORS®', short: 'SCCAOR',
@@ -335,8 +332,7 @@
       mlsOrderText: '加入顺序请先电话向 Board 确认。',
       notes: ['San Jose 核心区首选', '发送邮件至 membership@sccaor.com'],
       commercial: false,
-      bqAgents: 42,
-      image: 'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&q=80&w=1200&h=400'
+      bqAgents: 42
     },
     {
       id: 'SAMCAR', name: 'San Mateo County Association of REALTORS®', short: 'SAMCAR',
@@ -346,8 +342,7 @@
       mlsOrderText: '加入顺序请先电话向 Board 确认。',
       notes: ['San Mateo County 首选', '半岛地区房源集中'],
       commercial: false,
-      bqAgents: 28,
-      image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=1200&h=400'
+      bqAgents: 28
     },
     {
       id: 'OCREALTORS', name: 'Orange County REALTORS®', short: 'Orange County',
@@ -357,8 +352,7 @@
       mlsOrderText: '加入顺序请先电话向 Board 确认。',
       notes: ['Orange County 业务首选'],
       commercial: false,
-      bqAgents: 15,
-      image: 'https://images.unsplash.com/photo-1514924013411-cbf25faa35bb?auto=format&fit=crop&q=80&w=1200&h=400'
+      bqAgents: 15
     },
     {
       id: 'OBAR', name: 'OBAR & bridgeMLS', short: 'OBAR',
@@ -368,8 +362,7 @@
       mlsOrderText: '加入顺序请先电话向 Board 确认。',
       notes: ['东湾北部 / bridgeMLS 系统'],
       commercial: false,
-      bqAgents: 12,
-      image: 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&q=80&w=1200&h=400'
+      bqAgents: 12
     },
     {
       id: 'SFAR', name: 'San Francisco Association of REALTORS®', short: 'SFAR',
@@ -379,8 +372,7 @@
       mlsOrderText: '加入顺序请先电话向 Board 确认。',
       notes: ['旧金山市区首选', '高端公寓及商业物业'],
       commercial: false,
-      bqAgents: 20,
-      image: 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?auto=format&fit=crop&q=80&w=1200&h=400'
+      bqAgents: 20
     },
     {
       id: 'SAR', name: 'Sacramento Association of Realtors®', short: 'SAR & Metrolist',
@@ -390,8 +382,7 @@
       mlsOrderText: '加入顺序请先电话向 Board 确认。',
       notes: ['Sacramento 地区首选'],
       commercial: false,
-      bqAgents: 5,
-      image: 'https://images.unsplash.com/photo-1575517111478-7f6afd0973db?auto=format&fit=crop&q=80&w=1200&h=400'
+      bqAgents: 5
     },
     {
       id: 'CCAR', name: 'Contra Costa Association of Realtors®', short: 'CCAR',
@@ -401,8 +392,7 @@
       mlsOrderText: '加入顺序请先电话向 Board 确认。',
       notes: ['Contra Costa 地区首选'],
       commercial: false,
-      bqAgents: 10,
-      image: 'https://images.unsplash.com/photo-1583608205776-bfd35f0d9f83?auto=format&fit=crop&q=80&w=1200&h=400'
+      bqAgents: 10
     },
     {
       id: 'CABB', name: 'CA Association of Business Brokers', short: 'CABB',
@@ -412,8 +402,7 @@
       mlsOrderText: '联系 CABB 确认加入细节。',
       notes: ['商业并购与生意买卖首选', '提供专业商业交易 Forms', '可用折扣码: sfmjc5s6j'],
       commercial: true,
-      bqAgents: 8,
-      image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=1200&h=400'
+      bqAgents: 8
     }
   ];
 
@@ -496,10 +485,21 @@
     matched = matched.map(b => {
       const boardGeo = GEO[b.city.toLowerCase()] || null;
       const dist = haversine(agentGeo, boardGeo);
+      
+      // 修改排序逻辑：优先匹配用户勾选的顺序
+      let highestOrderIndex = 999;
+      b.covers.forEach(c => {
+         const idx = areas.indexOf(c);
+         if (idx !== -1 && idx < highestOrderIndex) highestOrderIndex = idx;
+      });
+      
       const areaHits = b.covers.filter(c => areas.includes(c)).length;
       let score = areaHits * 100;
+      if (highestOrderIndex !== 999) score -= highestOrderIndex * 10; // 越先勾选的优先级越高
+      
       if (commercial && b.commercial) score += 60;
       if (dist != null) score += Math.max(0, 60 - dist);
+      
       return { ...b, dist, score };
     }).sort((a, b) => b.score - a.score);
 
@@ -507,7 +507,7 @@
       resultEmpty.style.display = 'none';
       resultContent.style.display = 'block';
       resultContent.innerHTML = `
-        <div class="hero-image" style="background-image: url('https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=1200&h=400');">
+        <div class="hero-image">
            <div class="hero-badge"><span class="badge-pill gold">需人工评估</span></div>
         </div>
         <div class="result-body">
@@ -543,7 +543,7 @@
     resultContent.style.display = 'block';
 
     resultContent.innerHTML = `
-      <div class="hero-image" style="background-image: url('${primary.image}');">
+      <div class="hero-image">
         <div class="hero-badge">
           <span class="badge-pill gold">Top Recommendation</span>
           ${orderBadge}
@@ -604,7 +604,6 @@
             <h3>Other Options</h3>
             ${alternates.map(a => `
               <div class="alt-card">
-                <div class="alt-img" style="background-image: url('${a.image}');"></div>
                 <div class="alt-info">
                   <h4>${a.short}</h4>
                   <p>${a.mlsOrderText}</p>
