@@ -26,7 +26,6 @@
     --radius-lg: 24px;
     
     --shadow-card: 0 10px 40px rgba(0,0,0,0.08);
-    --shadow-hover: 0 15px 50px rgba(0,0,0,0.12);
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -314,9 +313,7 @@
       mlsOrderText: '先加入 MLSListings，再填写 SILVAR Board 申请。',
       notes: ['南湾首选 Board', '申请表发至 membership@silvar.org', '建议电话跟进加速审批'],
       commercial: false,
-      // BQ 活跃经纪人模拟数据
       bqAgents: 48,
-      // Unsplash 真实地标照片
       image: 'https://images.unsplash.com/photo-1582215791367-8fb67495a123?auto=format&fit=crop&q=80&w=1200&h=400'
     },
     {
@@ -476,7 +473,6 @@
     const areas = selectedAreas();
     const hasMls = $('hasMls').value;
     const commercial = $('commercialSelect').value === 'yes';
-    const acceptExisting = $('acceptExisting').checked;
     
     const resultEmpty = $('result-empty');
     const resultContent = $('result-content');
@@ -520,7 +516,7 @@
           <div class="section">
             <h3>Next Steps</h3>
             <ul>
-              <li>提交 BQ 咨询/申请表：<a href="https://forms.gle/j5d4Mx4vjk9KLhnHA" target="_blank" rel="noopener">forms.gle/j5d4Mx4vjk9KLhnHA</a></li>
+              <li>提交 BQ 咨询/申请表：<a href="https://bqrealtygroup.com/thebqteam/office-policy-and-instruction/641-bq%E3%80%81" target="_blank" rel="noopener">BQ 申请表与咨询</a></li>
               <li>公司会先评估是否有其他已加入 Board 适合你的情况；若无，再评估新增 Board 的成本。</li>
               <li>请同时联系目标 Board 确认价格、billing cycle 与 MLS 覆盖范围。</li>
             </ul>
@@ -598,7 +594,8 @@
         <div class="section">
           <h3>Process Next Step</h3>
           <ul>
-            <li>下载申请表 → 发 HR (hr@bqrealtygroup.com) 检查 → DocuSign 给 broker@bqrealtygroup.com 签字 (Jing Qin) → 发送给 Board。</li>
+            <li><strong>下载 BQ 官方申请表：</strong> <a href="https://bqrealtygroup.com/thebqteam/office-policy-and-instruction/641-bq%E3%80%81" target="_blank" rel="noopener" style="font-weight:600;">点击此处进入 BQ 申请页面</a></li>
+            <li>填写后发 HR (hr@bqrealtygroup.com) 检查 → DocuSign 给 broker@bqrealtygroup.com 签字 (Jing Qin) → 发送给 Board。</li>
           </ul>
         </div>
 
