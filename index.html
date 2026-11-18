@@ -36,21 +36,20 @@
     -webkit-font-smoothing: antialiased;
   }
   
-  /* 顶部导航 */
+  /* 顶部导航 Logo */
   .top-nav {
-    padding: 24px 40px;
+    padding: 18px 40px;
     display: flex;
     align-items: center;
     border-bottom: 1px solid var(--border-dark);
+    background-color: #000;
   }
-  .logo-mark {
-    font-family: 'Playfair Display', serif;
-    font-size: 24px;
-    font-weight: 700;
-    color: var(--bg-card);
-    letter-spacing: 0.1em;
+  .top-nav img {
+    height: 48px; /* 调整Logo大小 */
+    object-fit: contain;
+    /* 如果你的Logo是白底，可以取消下面这行的注释来反色；如果是透明底金边，请保留 */
+    /* mix-blend-mode: screen; */
   }
-  .logo-mark span { color: var(--gold-primary); }
 
   .wrap { 
     max-width: 1200px; 
@@ -218,7 +217,8 @@
 <body>
 
 <div class="top-nav">
-  <div class="logo-mark">BQ <span>REALTY GROUP</span></div>
+  <!-- 这里替换成了你提供的Logo图片链接 -->
+  <img src="https://s3.bmp.ovh/imgs/2023/10/26/7303f676c7f5e376.png" alt="BQ REALTY Logo">
 </div>
 
 <div class="wrap">
@@ -471,12 +471,16 @@
       return;
     }
 
+    // 核心逻辑修复：只保留有明确覆盖勾选区域的 Board
     let matched = BOARDS.filter(b => b.covers.some(c => areas.includes(c)));
+    
+    // 如果勾选了商业地产或商业区域，强制加入 CABB
     if (commercial || areas.includes('commercial')) {
       const cabb = BOARDS.find(b => b.id === 'CABB');
       if (cabb && !matched.some(b => b.id === 'CABB')) matched.push(cabb);
     }
 
+    // 去重
     const seen = new Set();
     matched = matched.filter(b => { if (seen.has(b.id)) return false; seen.add(b.id); return true; });
 
@@ -486,17 +490,16 @@
       const boardGeo = GEO[b.city.toLowerCase()] || null;
       const dist = haversine(agentGeo, boardGeo);
       
+      // 核心评分机制：匹配度越高分越高
       const areaHits = b.covers.filter(c => areas.includes(c)).length;
-      let score = areaHits * 100;
-      
-      // 核心修复：如果用户勾选了某个区域，且 Board 覆盖了这个区域，加分极大，完全避免跨区瞎匹配
-      if (b.covers.includes('orange') && areas.includes('orange')) score += 500;
-      if (b.covers.includes('sf') && areas.includes('sf')) score += 500;
-      if (b.covers.includes('san_mateo') && areas.includes('san_mateo')) score += 500;
-      if (b.covers.includes('sacramento') && areas.includes('sacramento')) score += 500;
+      let score = areaHits * 1000; 
 
-      if (commercial && b.commercial) score += 60;
-      if (dist != null) score += Math.max(0, 60 - dist);
+      // 距离加分（越近越高，但不会超过地区匹配的权重）
+      if (dist != null) {
+         score += Math.max(0, 100 - dist); 
+      }
+      // 商业地产额外加分
+      if (commercial && b.commercial) score += 500;
       
       return { ...b, dist, score };
     }).sort((a, b) => b.score - a.score);
