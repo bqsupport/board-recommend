@@ -36,7 +36,7 @@
     -webkit-font-smoothing: antialiased;
   }
   
-  /* 顶部导航 Logo - 改为纯代码 SVG 绘制，绝对不报错 */
+  /* 顶部导航 Logo - 纯代码绘制，绝对不裂开 */
   .top-nav {
     padding: 24px 40px;
     display: flex;
@@ -45,7 +45,7 @@
     background-color: #000;
   }
   .logo-svg {
-    height: 42px;
+    height: 48px;
     width: auto;
   }
 
@@ -215,7 +215,7 @@
 <body>
 
 <div class="top-nav">
-  <!-- 纯 SVG 绘制的高级 BQ Logo -->
+  <!-- 纯代码绘制的 BQ Logo，绝对不会加载失败 -->
   <svg class="logo-svg" viewBox="0 0 400 60" xmlns="http://www.w3.org/2000/svg">
     <defs>
       <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -223,14 +223,14 @@
         <stop offset="100%" stop-color="#b89b5e" />
       </linearGradient>
     </defs>
-    <!-- 房屋图标部分 -->
+    <!-- 房屋图标 -->
     <g stroke="url(#goldGrad)" stroke-width="2.5" fill="none" stroke-linejoin="round" stroke-linecap="round">
       <path d="M15 55 V30 L35 10 L55 30 V55" />
       <path d="M25 55 V38 L35 28 L45 38 V55" />
       <line x1="5" y1="55" x2="65" y2="55" />
       <line x1="10" y1="28" x2="60" y2="28" />
     </g>
-    <!-- 文字部分 -->
+    <!-- 文字 -->
     <text x="85" y="42" font-family="'Inter', sans-serif" font-size="32" font-weight="700" fill="url(#goldGrad)" letter-spacing="3">
       BQ REALTY
     </text>
