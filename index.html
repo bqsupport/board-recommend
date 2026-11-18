@@ -27,7 +27,6 @@
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   
-  /* 全屏无缝渐变 */
   html, body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; 
     background: linear-gradient(180deg, #000000 0%, #0a0a0a 15%, #121212 100%);
@@ -38,7 +37,6 @@
     min-height: 100vh;
   }
   
-  /* 顶部导航完全透明 */
   .top-nav { 
     padding: 24px 40px; 
     display: flex; 
@@ -59,7 +57,6 @@
   .grid { display: grid; grid-template-columns: 400px 1fr; gap: 40px; align-items: start; }
   @media (max-width: 960px) { .grid { grid-template-columns: 1fr; } }
 
-  /* 左侧表单 */
   .panel-form { background: var(--bg-panel); border: 1px solid var(--border-dark); border-radius: var(--radius-lg); padding: 32px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
   .panel-form h2 { font-family: 'Playfair Display', serif; color: var(--gold-primary); font-size: 22px; font-weight: 500; margin-bottom: 24px; border-bottom: 1px solid var(--border-dark); padding-bottom: 16px; }
 
@@ -71,19 +68,16 @@
   .checkline { display: flex; align-items: center; gap: 10px; margin-top: 24px; font-size: 13px; color: var(--text-light-muted); cursor: pointer; }
   .checkline input { width: auto; accent-color: var(--gold-primary); cursor: pointer; }
 
-  /* 复选框组 */
   .area-group { border: 1px solid var(--border-dark); border-radius: var(--radius-sm); padding: 16px; background: #222; max-height: 240px; overflow-y: auto; font-size: 13px; }
   .area-group label { display: flex; align-items: flex-start; gap: 12px; margin: 0 0 12px 0; font-weight: 400; cursor: pointer; line-height: 1.4; color: var(--text-light); text-transform: none; letter-spacing: 0; }
   .area-group label:last-child { margin-bottom: 0; }
   .area-group input[type="checkbox"] { margin-top: 2px; width: 16px; height: 16px; accent-color: var(--gold-primary); cursor: pointer; }
 
-  /* 按钮 */
   button { margin-top: 28px; width: 100%; padding: 16px; border: 0; border-radius: var(--radius-sm); background: var(--gold-primary); color: #111; font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; cursor: pointer; transition: background .2s; font-family: 'Inter', sans-serif; }
   button:hover { background: var(--gold-bright); }
   button.secondary { background: transparent; color: var(--text-light-muted); border: 1px solid var(--border-dark); margin-top: 12px; }
   button.secondary:hover { color: #fff; border-color: #555; }
 
-  /* 右侧结果面板 */
   .panel-result { background: var(--bg-card); border-radius: var(--radius-lg); box-shadow: 0 20px 60px rgba(0,0,0,0.5); min-height: 600px; overflow: hidden; position: relative; display: flex; flex-direction: column; }
   
   .result-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 600px; color: var(--text-muted); text-align: center; padding: 40px; background: #fafafa; }
@@ -142,9 +136,9 @@
     <div class="panel-form">
       <h2>Agent Details</h2>
 
-      <!-- 姓名输入框已修改为 Jason -->
+      <!-- 关键修改：添加了 autocomplete="off" 属性，彻底关闭浏览器的历史记录白框 -->
       <label for="name">经纪人姓名 (可选)</label>
-      <input id="name" placeholder="例如：Jason">
+      <input id="name" placeholder="例如：Jason" autocomplete="off">
 
       <label for="address">住址 / 培训地点</label>
       <input id="address" placeholder="例如：Cupertino, CA 或 95129" autocomplete="off">
