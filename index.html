@@ -36,19 +36,17 @@
     -webkit-font-smoothing: antialiased;
   }
   
-  /* 顶部导航 Logo */
+  /* 顶部导航 Logo - 改为纯代码 SVG 绘制，绝对不报错 */
   .top-nav {
-    padding: 18px 40px;
+    padding: 24px 40px;
     display: flex;
     align-items: center;
     border-bottom: 1px solid var(--border-dark);
     background-color: #000;
   }
-  .top-nav img {
-    height: 48px; /* 调整Logo大小 */
-    object-fit: contain;
-    /* 如果你的Logo是白底，可以取消下面这行的注释来反色；如果是透明底金边，请保留 */
-    /* mix-blend-mode: screen; */
+  .logo-svg {
+    height: 42px;
+    width: auto;
   }
 
   .wrap { 
@@ -217,8 +215,26 @@
 <body>
 
 <div class="top-nav">
-  <!-- 这里替换成了你提供的Logo图片链接 -->
-  <img src="https://s3.bmp.ovh/imgs/2023/10/26/7303f676c7f5e376.png" alt="BQ REALTY Logo">
+  <!-- 纯 SVG 绘制的高级 BQ Logo -->
+  <svg class="logo-svg" viewBox="0 0 400 60" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="#f2dc76" />
+        <stop offset="100%" stop-color="#b89b5e" />
+      </linearGradient>
+    </defs>
+    <!-- 房屋图标部分 -->
+    <g stroke="url(#goldGrad)" stroke-width="2.5" fill="none" stroke-linejoin="round" stroke-linecap="round">
+      <path d="M15 55 V30 L35 10 L55 30 V55" />
+      <path d="M25 55 V38 L35 28 L45 38 V55" />
+      <line x1="5" y1="55" x2="65" y2="55" />
+      <line x1="10" y1="28" x2="60" y2="28" />
+    </g>
+    <!-- 文字部分 -->
+    <text x="85" y="42" font-family="'Inter', sans-serif" font-size="32" font-weight="700" fill="url(#goldGrad)" letter-spacing="3">
+      BQ REALTY
+    </text>
+  </svg>
 </div>
 
 <div class="wrap">
@@ -471,16 +487,12 @@
       return;
     }
 
-    // 核心逻辑修复：只保留有明确覆盖勾选区域的 Board
     let matched = BOARDS.filter(b => b.covers.some(c => areas.includes(c)));
-    
-    // 如果勾选了商业地产或商业区域，强制加入 CABB
     if (commercial || areas.includes('commercial')) {
       const cabb = BOARDS.find(b => b.id === 'CABB');
       if (cabb && !matched.some(b => b.id === 'CABB')) matched.push(cabb);
     }
 
-    // 去重
     const seen = new Set();
     matched = matched.filter(b => { if (seen.has(b.id)) return false; seen.add(b.id); return true; });
 
@@ -490,15 +502,14 @@
       const boardGeo = GEO[b.city.toLowerCase()] || null;
       const dist = haversine(agentGeo, boardGeo);
       
-      // 核心评分机制：匹配度越高分越高
+      // 极简打分法：命中的勾选区域数量 * 1000
       const areaHits = b.covers.filter(c => areas.includes(c)).length;
       let score = areaHits * 1000; 
 
-      // 距离加分（越近越高，但不会超过地区匹配的权重）
+      // 距离只做轻微辅助修正（距离越近加个几十分，但绝对无法超越地区匹配的权重）
       if (dist != null) {
          score += Math.max(0, 100 - dist); 
       }
-      // 商业地产额外加分
       if (commercial && b.commercial) score += 500;
       
       return { ...b, dist, score };
